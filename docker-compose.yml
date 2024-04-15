@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # MongoDB service
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  # FastAPI service
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webapp
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./static:/static:ro
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  mongo_data:
+    driver: local

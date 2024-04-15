@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <title>WebApp Telegram Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            --pico-background-color: var(--tg-theme-bg-color);
+        }
+
+        header {
+            --pico-background-color: var(--tg-theme-header-bg-color);
+            --pico-color: var(--tg-theme-header-text-color);
+        }
+
+        h1 {
+            --pico-color: var(--tg-theme-accent-text-color);
+        }
+
+        button {
+            --pico-color: var(--tg-theme-button-text-color);
+            --pico-background-color: var(--tg-theme-button-color);
+            --pico-border-color: none;
+        }
+
+        button:hover {
+            --pico-background-color: var(--tg-theme-button-color);
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+</body>
+
+</html>
