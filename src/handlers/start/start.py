@@ -3,9 +3,10 @@ import logging
 from telegram import Update, User, UserProfilePhotos
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-import handlers.start.keyboards as keyboards
 from database import get_db_collection
 from models.users import UserModel
+
+from .keyboards import create_main_markup
 
 logger = logging.getLogger(__file__)
 
@@ -58,7 +59,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         )
         await update.message.reply_text(
             f"Hi, {tg_user.first_name}",
-            reply_markup=keyboards.create_main_markup(tg_user.id),
+            reply_markup=create_main_markup(tg_user.id),
         )
     except Exception as error_message:
         logging.error(f"An error occurred: {error_message}")
