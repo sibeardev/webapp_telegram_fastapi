@@ -4,7 +4,7 @@ from telegram import Update, User, UserProfilePhotos
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 import handlers.start.keyboards as keyboards
-from database import USERS
+from database import get_db_collection
 from models.users import UserModel
 
 logger = logging.getLogger(__file__)
@@ -51,7 +51,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             username=tg_user.first_name,
             photo_url=photo_path,
         )
-        await USERS.find_one_and_update(
+        await get_db_collection("users").find_one_and_update(
             {"user_id": tg_user.id},
             {"$set": new_user.model_dump(by_alias=True, exclude=["id"])},
             upsert=True,

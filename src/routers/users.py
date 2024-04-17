@@ -6,10 +6,10 @@ from pydantic import BaseModel
 from pymongo import ReturnDocument
 from starlette.exceptions import HTTPException
 
-from settings import TEMPLATES
-from database import USERS
+from database import get_db_collection
 from dependencies import get_token_header
 from models.users import UpdateUserModel, UserCollection, UserModel
+from settings import TEMPLATES
 
 logger = logging.getLogger(__file__)
 
@@ -29,7 +29,9 @@ router = APIRouter(
 )
 async def get_users():
     try:
-        return UserCollection(users=await USERS.find().to_list(1000))
+        return UserCollection(
+            users=await get_db_collection("users").find().to_list(1000)
+        )
     except Exception as e:
         logging.error(f"An error occurred: {e}")
 
@@ -42,8 +44,12 @@ async def get_users():
     response_model_by_alias=False,
 )
 async def create_user(user: UserModel = Body(...)):
-    new_user = await USERS.insert_one(user.model_dump(by_alias=True, exclude=["id"]))
-    created_user = await USERS.find_one({"_id": new_user.inserted_id})
+    new_user = await get_db_collection("users").insert_one(
+        user.model_dump(by_alias=True, exclude=["id"])
+    )
+    created_user = await get_db_collection("users").find_one(
+        {"_id": new_user.inserted_id}
+    )
 
     return created_user
 
@@ -55,7 +61,9 @@ async def create_user(user: UserModel = Body(...)):
     response_model_by_alias=False,
 )
 async def get_user(user_id: int, request: Request):
-    if (user := await USERS.find_one({"user_id": user_id})) is not None:
+    if (
+        user := await get_db_collection("users").find_one({"user_id": user_id})
+    ) is not None:
         template = "user.html"
         context = {"request": request, "user": user}
 
@@ -79,7 +87,7 @@ async def update_user(user_id: int, user: UserModel = Body(...)):
         if value is not None
     }
     if len(user) >= 1:
-        update_result = await USERS.find_one_and_update(
+        update_result = await get_db_collection("users").find_one_and_update(
             {"user_id": user_id},
             {"$set": user},
             return_document=ReturnDocument.AFTER,
@@ -93,7 +101,9 @@ async def update_user(user_id: int, user: UserModel = Body(...)):
             )
 
     # The update is empty, but we should still return the matching document:
-    if (existing_user := await USERS.find_one({"user_id": user_id})) is not None:
+    if (
+        existing_user := await get_db_collection("users").find_one({"user_id": user_id})
+    ) is not None:
         return existing_user
 
     raise HTTPException(
@@ -103,7 +113,7 @@ async def update_user(user_id: int, user: UserModel = Body(...)):
 
 @router.delete("/{user_id}", response_description="Delete a user")
 async def delete_user(user_id: int):
-    delete_result = await USERS.delete_one({"user_id": user_id})
+    delete_result = await get_db_collection("users").delete_one({"user_id": user_id})
 
     if delete_result.deleted_count == 1:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
