@@ -16,7 +16,7 @@ This project is a web application skeleton for building a Telegram bot using Fas
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/dad-siberian/webapp_telegram_fastapi.git
+git clone https://github.com/sibeardev/webapp_telegram_fastapi.git
 ```
 
 2. Navigate into the cloned directory: 
