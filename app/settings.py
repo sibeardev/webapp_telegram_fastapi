@@ -9,6 +9,7 @@ env.read_env()
 
 # Define base directory and project name
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = "static"
 PROJECT_NAME = env.str("PROJECT_NAME", "webapp_telegram_fastapi")
 
 # Telegram Bot token, webhook URL, port, and debug mode

@@ -2,7 +2,7 @@ import logging
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 
-from settings import MONGODB_URL, PROJECT_NAME
+from app.settings import MONGODB_URL, PROJECT_NAME
 
 logger = logging.getLogger(__file__)
 

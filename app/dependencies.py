@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Header, HTTPException, status
 
-from settings import X_TOKEN
+from app.settings import X_TOKEN
 
 
 async def get_token_header(x_token: Annotated[str, Header()]):

@@ -12,10 +12,10 @@ from telegram import Update
 from telegram.ext import Application
 from telegram.warnings import PTBUserWarning
 
-from exceptions import exception_handlers
-from handlers.start import start
-from routers import users
-from settings import LOGGING_CONFIG, PORT, TELEGRAM_TOKEN, WEBHOOK_URL
+from app.exceptions import exception_handlers
+from app.handlers.start import start
+from app.routers.welcome import router as start_router
+from app.settings import LOGGING_CONFIG, PORT, STATIC_ROOT, TELEGRAM_TOKEN, WEBHOOK_URL
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__file__)
@@ -48,12 +48,16 @@ async def main() -> None:
     # Define routes for FastAPI application
     routes = [
         Route(path="/telegram_update", endpoint=telegram, methods=["POST"]),
-        Mount(path="/static", app=StaticFiles(directory="static"), name="static"),
+        Mount(
+            path="/static",
+            app=StaticFiles(directory=STATIC_ROOT, html=True),
+            name="static",
+        ),
     ]
     app = FastAPI(debug=True, routes=routes, exception_handlers=exception_handlers)
 
     # Include others router
-    app.include_router(users.router)
+    app.include_router(start_router, prefix="/user")
 
     # Create a uvicorn server instance
     web_server = uvicorn.Server(

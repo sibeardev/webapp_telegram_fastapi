@@ -3,8 +3,9 @@ import logging
 from telegram import Update, User, UserProfilePhotos
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-from database import get_db_collection
-from models.users import UserModel
+from app.db.mongo import get_db_collection
+from app.models.users import UserModel
+
 
 from .keyboards import create_main_markup
 

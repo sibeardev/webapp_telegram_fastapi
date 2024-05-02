@@ -6,16 +6,14 @@ from pydantic import BaseModel
 from pymongo import ReturnDocument
 from starlette.exceptions import HTTPException
 
-from database import get_db_collection
-from dependencies import get_token_header
-from models.users import UpdateUserModel, UserCollection, UserModel
-from settings import TEMPLATES
+from app.db.mongo import get_db_collection
+from app.dependencies import get_token_header
+from app.models.users import UpdateUserModel, UserCollection, UserModel
+from app.settings import STATIC_ROOT, TEMPLATES
 
 logger = logging.getLogger(__file__)
 
 router = APIRouter(
-    prefix="/users",
-    tags=["users"],
     # dependencies=[Depends(get_token_header)],
     responses={status.HTTP_404_NOT_FOUND: {"description": "Not found"}},
 )
