@@ -6,7 +6,6 @@ from .env import EnvSettings
 ENV = EnvSettings()  # type: ignore
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = "static"
 PROJECT_NAME = ENV.PROJECT_NAME
 
 DEBUG = ENV.DEBUG

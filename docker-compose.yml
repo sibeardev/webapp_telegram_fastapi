@@ -1,5 +1,4 @@
 services:
-  # MongoDB service
   mongo:
     image: mongo
     container_name: mongodb
@@ -9,7 +8,6 @@ services:
       - mongo_data:/data/db
     restart: always
 
-  # FastAPI service
   backend:
     build:
       context: .
@@ -19,11 +17,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./static:/static:ro
+      - ./backend:/app/backend
     depends_on:
       - mongo
     env_file:
-      - .env
+      - ./backend/.env
     restart: always
 
 volumes:

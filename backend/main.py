@@ -1,17 +1,18 @@
 import asyncio
 import logging
+import os
 from urllib.parse import urljoin
 
 import uvicorn
-from fastapi import FastAPI
-from telegram import Update
-from telegram.error import NetworkError, TelegramError
-
 from app.api.main import api_router
 from app.core import db
 from app.core.config import DEBUG, EXTERNAL_URL, HOST, PORT, TELEGRAM_SECRET
 from app.exceptions import exception_handlers
 from bot.dispatcher import TELEGRAM_BOT
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from telegram import Update
+from telegram.error import NetworkError, TelegramError
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +31,11 @@ async def main() -> None:
 
     app = FastAPI(debug=DEBUG, exception_handlers=exception_handlers)  # type: ignore
     app.include_router(api_router)
+
+    frontend_dir = "./frontend/public"
+    if not os.path.exists("./frontend/public"):
+        raise RuntimeError(f"Frontend build directory does not exist: {frontend_dir}")
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
     web_server = uvicorn.Server(
         config=uvicorn.Config(
