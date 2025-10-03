@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # MongoDB service
   mongo:
@@ -12,11 +10,12 @@ services:
     restart: always
 
   # FastAPI service
-  fastapi:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: webapp
+    container_name: backend
+    command: uv run python3 main.py
     ports:
       - "8000:8000"
     volumes:

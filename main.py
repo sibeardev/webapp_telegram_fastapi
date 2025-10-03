@@ -1,79 +1,65 @@
 import asyncio
-import logging.config
-from warnings import filterwarnings
+import logging
+from urllib.parse import urljoin
 
 import uvicorn
 from fastapi import FastAPI
-from fastapi.requests import Request
-from fastapi.responses import Response
-from fastapi.staticfiles import StaticFiles
-from starlette.routing import Mount, Route
 from telegram import Update
-from telegram.ext import Application
-from telegram.warnings import PTBUserWarning
+from telegram.error import NetworkError, TelegramError
 
+from app.api.main import api_router
+from app.core import db
+from app.core.config import DEBUG, EXTERNAL_URL, HOST, PORT, TELEGRAM_SECRET
 from app.exceptions import exception_handlers
-from app.handlers.start import start
-from app.routers.welcome import router as start_router
-from app.settings import LOGGING_CONFIG, PORT, STATIC_ROOT, TELEGRAM_TOKEN, WEBHOOK_URL
+from bot.dispatcher import TELEGRAM_BOT
 
-logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger(__file__)
-filterwarnings(
-    action="ignore", message=r".*CallbackQueryHandler", category=PTBUserWarning
-)
+logger = logging.getLogger(__name__)
 
 
 async def main() -> None:
-    # Create a Telegram application instance
-    telegram_app = (
-        Application.builder()
-        .token(TELEGRAM_TOKEN)
-        .concurrent_updates(True)
-        .updater(None)
-        .build()
+    await db.init_db()
+
+    await TELEGRAM_BOT.bot.delete_webhook(drop_pending_updates=True)
+    await TELEGRAM_BOT.bot.set_webhook(
+        url=urljoin(EXTERNAL_URL, "/telegram/update"),
+        allowed_updates=Update.ALL_TYPES,
+        secret_token=TELEGRAM_SECRET,
     )
-    # Setup Telegram update handlers
-    start.setup_handler(telegram_app)
-    # Set webhook URL for Telegram bot
-    await telegram_app.bot.set_webhook(url=f"{WEBHOOK_URL}/telegram_update")
+    logger.info(await TELEGRAM_BOT.bot.get_me())
+    logger.info(await TELEGRAM_BOT.bot.get_webhook_info())
 
-    async def telegram(request: Request) -> Response:
-        """Define endpoint for receiving Telegram updates"""
-        await telegram_app.update_queue.put(
-            Update.de_json(data=await request.json(), bot=telegram_app.bot)
-        )
-        return Response()
+    app = FastAPI(debug=DEBUG, exception_handlers=exception_handlers)  # type: ignore
+    app.include_router(api_router)
 
-    # Define routes for FastAPI application
-    routes = [
-        Route(path="/telegram_update", endpoint=telegram, methods=["POST"]),
-        Mount(
-            path="/static",
-            app=StaticFiles(directory=STATIC_ROOT, html=True),
-            name="static",
-        ),
-    ]
-    app = FastAPI(debug=True, routes=routes, exception_handlers=exception_handlers)
-
-    # Include others router
-    app.include_router(start_router, prefix="/user")
-
-    # Create a uvicorn server instance
     web_server = uvicorn.Server(
         config=uvicorn.Config(
             app=app,
             port=PORT,
             use_colors=True,
-            host="127.0.0.1",
+            host=HOST,
         )
     )
 
-    # Run Telegram application and web server concurrently
-    async with telegram_app:
-        await telegram_app.start()  # Start receiving Telegram updates
-        await web_server.serve()  # Start serving FastAPI application
-        await telegram_app.stop()  # Stop receiving Telegram updates
+    async with TELEGRAM_BOT:
+        try:
+            logger.info(await TELEGRAM_BOT.bot.get_me())
+            logger.info(await TELEGRAM_BOT.bot.get_webhook_info())
+            await TELEGRAM_BOT.start()
+            await web_server.serve()
+        except (NetworkError, TelegramError) as error:
+            logger.error("Telegram API error: %s", error, exc_info=True)
+        except OSError as error:
+            logger.error("Server error (port or config issue): %s", error, exc_info=True)
+        except asyncio.CancelledError:
+            logger.info("Asyncio task cancelled, shutting down gracefully.")
+            raise
+        except KeyboardInterrupt:
+            logger.info("Server stopped manually.")
+        except Exception as error:
+            logger.error("Unexpected error: %s", error, exc_info=True)
+        finally:
+            await TELEGRAM_BOT.stop()
+            logger.info("Bot and web server stopped.")
 
 
 if __name__ == "__main__":
