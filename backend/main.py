@@ -6,7 +6,14 @@ from urllib.parse import urljoin
 import uvicorn
 from app.api.main import api_router
 from app.core import db
-from app.core.config import DEBUG, EXTERNAL_URL, HOST, PORT, TELEGRAM_SECRET
+from app.core.config import (
+    DEBUG,
+    EXTERNAL_URL,
+    FRONTEND_DIR,
+    HOST,
+    PORT,
+    TELEGRAM_SECRET,
+)
 from app.exceptions import exception_handlers
 from bot.dispatcher import TELEGRAM_BOT
 from fastapi import FastAPI
@@ -32,10 +39,10 @@ async def main() -> None:
     app = FastAPI(debug=DEBUG, exception_handlers=exception_handlers)  # type: ignore
     app.include_router(api_router)
 
-    frontend_dir = "./frontend/public"
-    if not os.path.exists("./frontend/public"):
-        raise RuntimeError(f"Frontend build directory does not exist: {frontend_dir}")
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+    if not os.path.exists(FRONTEND_DIR):
+        raise RuntimeError(f"Frontend build directory does not exist: {FRONTEND_DIR}")
+    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
     web_server = uvicorn.Server(
         config=uvicorn.Config(

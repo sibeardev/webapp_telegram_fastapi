@@ -1,11 +1,14 @@
 import logging.config
 import os
+from pathlib import Path
 
 from .env import EnvSettings
 
 ENV = EnvSettings()  # type: ignore
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).resolve().parents[2]
+FRONTEND_DIR = BASE_DIR / "frontend" / "public"
+
 PROJECT_NAME = ENV.PROJECT_NAME
 
 DEBUG = ENV.DEBUG
@@ -22,7 +25,7 @@ TELEGRAM_SECRET = ENV.TELEGRAM.SECRET
 MONGO_DSN = str(ENV.MONGO_DSN)
 
 # LOGGING SETTINGS
-ERROR_LOG_FILENAME = os.path.join(BASE_DIR, "logs/error.log")
+ERROR_LOG_FILENAME = BASE_DIR / "frontend" / "error.log"
 os.makedirs(os.path.dirname(ERROR_LOG_FILENAME), exist_ok=True)
 LOGGING = {
     "version": 1,
