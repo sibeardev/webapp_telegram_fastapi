@@ -1,0 +1,17 @@
+.tg-bg { background-color: var(--tg-theme-bg-color); }
+.tg-secondary-bg { background-color: var(--tg-theme-secondary-bg-color); }
+
+.tg-header-bg { background-color: var(--tg-theme-header-bg-color); }
+.tg-section-bg { background-color: var(--tg-theme-section-bg-color); }
+.tg-section-separator { color: var(--tg-theme-section-separator-color); }
+.tg-link { color: var(--tg-theme-link-color); }
+.tg-button-bg { background-color: var(--tg-theme-button-color); }
+.tg-bottom-bar-bg { background-color: var(--tg-theme-bottom-bar-bg-color); }
+
+.tg-text { color: var(--tg-theme-text-color); }
+.tg-subtitle-text { color: var(--tg-theme-subtitle-text-color); }
+.tg-accent-text { color: var(--tg-theme-accent-text-color); }
+.tg-hint-text { color: var(--tg-theme-hint-color); }
+.tg-section-header-text { color: var(--tg-theme-section-header-text-color); }
+.tg-button-text { color: var(--tg-theme-button-text-color); }
+.tg-destructive-text { color: var(--tg-theme-destructive-text-color); }
