@@ -1,5 +1,5 @@
-FROM node:20 AS builder
-WORKDIR /app/frontend
+FROM node:20 AS frontend-builder
+WORKDIR /app
 COPY frontend/package*.json ./
 RUN npm install
 COPY frontend/ ./
@@ -12,5 +12,5 @@ RUN pip install uv
 COPY backend/pyproject.toml backend/uv.lock ./
 RUN uv sync --no-dev
 COPY backend/ ./
-COPY --from=builder /app/frontend/dist ./frontend/public
+COPY --from=frontend-builder /app/build ./frontend/build
 ENV PYTHONUNBUFFERED=1

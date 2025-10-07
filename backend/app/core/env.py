@@ -19,6 +19,7 @@ class EnvSettings(BaseSettings):
     HOST: str = "0.0.0.0"
     DEBUG: bool = True
     PROJECT_NAME: str = "fridrik"
+    SECRET_KEY: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

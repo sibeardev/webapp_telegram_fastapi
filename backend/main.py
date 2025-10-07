@@ -4,7 +4,7 @@ import os
 from urllib.parse import urljoin
 
 import uvicorn
-from app.api.main import api_router
+from app.api.routes.main import api_router
 from app.core import db
 from app.core.config import (
     DEBUG,
@@ -29,7 +29,7 @@ async def main() -> None:
 
     await TELEGRAM_BOT.bot.delete_webhook(drop_pending_updates=True)
     await TELEGRAM_BOT.bot.set_webhook(
-        url=urljoin(EXTERNAL_URL, "/telegram/update"),
+        url=urljoin(EXTERNAL_URL, "/api/telegram/update"),
         allowed_updates=Update.ALL_TYPES,
         secret_token=TELEGRAM_SECRET,
     )
@@ -42,7 +42,6 @@ async def main() -> None:
     if not os.path.exists(FRONTEND_DIR):
         raise RuntimeError(f"Frontend build directory does not exist: {FRONTEND_DIR}")
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
-    app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="assets")
 
     web_server = uvicorn.Server(
         config=uvicorn.Config(

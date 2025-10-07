@@ -1,9 +1,8 @@
 from fastapi import APIRouter
 
-from .routes import telegram, users, webapp
+from . import telegram, users
 
-api_router = APIRouter()
+api_router = APIRouter(prefix="/api")
 
 api_router.include_router(telegram.router)
-api_router.include_router(webapp.router)
 api_router.include_router(users.router)

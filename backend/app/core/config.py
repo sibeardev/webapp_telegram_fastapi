@@ -7,7 +7,7 @@ from .env import EnvSettings
 ENV = EnvSettings()  # type: ignore
 
 BASE_DIR = Path(__file__).resolve().parents[2]
-FRONTEND_DIR = BASE_DIR / "frontend" / "public"
+FRONTEND_DIR = BASE_DIR / "frontend" / "build"
 
 PROJECT_NAME = ENV.PROJECT_NAME
 
@@ -16,6 +16,10 @@ EXTERNAL_URL = str(ENV.EXTERNAL_URL)
 PORT = ENV.PORT
 HOST = ENV.HOST
 PROJECT_NAME = ENV.PROJECT_NAME
+
+SECRET_KEY = ENV.SECRET_KEY
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 # TELEGRAM SETTINGS
 TELEGRAM_TOKEN = ENV.TELEGRAM.TOKEN

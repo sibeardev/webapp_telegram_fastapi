@@ -1,13 +1,19 @@
 import logging
 
+from app.api.depends import get_current_user
 from app.core.config import TELEGRAM_TOKEN
-from app.core.security import validate_telegram_init_data
+from app.core.security import create_access_token, validate_telegram_init_data
 from bot.models import User
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(tags=["user"], prefix="/api/user")
+router = APIRouter(tags=["user"], prefix="/user")
+
+
+@router.get("/me")
+async def get_user(user: User = Depends(get_current_user)):
+    return user
 
 
 @router.post("/auth")
@@ -24,5 +30,6 @@ async def webapp_auth(request: Request):
 
     user_data = init_data_unsafe.get("user")
     user = await User.update_or_create(user_data)
+    token = create_access_token(user.id)  # type: ignore
 
-    return user
+    return token
