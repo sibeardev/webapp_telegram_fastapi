@@ -2,14 +2,26 @@
 
 ## Overview
 
-This project is a web application skeleton for building a Telegram bot using FastAPI and Python Telegram Bot. It includes integration with MongoDB as the database backend.
+This project is a full-stack web application skeleton for building a Telegram WebApp integrated with a FastAPI backend and MongoDB database.
+It includes a SvelteKit frontend that runs as a Telegram WebApp and interacts with the backend via REST API.
 
 ## Features
 
-- **FastAPI Backend**: Utilizes FastAPI framework for building the web application backend.
-- **Python Telegram Bot**: Integrates Python Telegram Bot library for interacting with the Telegram API.
-- **MongoDB Database**: Uses MongoDB as the database backend for storing bot data.
-- **Skeleton Structure**: Provides a basic structure to kickstart the development of a Telegram bot web application.
+#### Backend
+
+- **FastAPI Framework** – High-performance Python web framework.
+- **Python Telegram Bot** – Integration with the Telegram Bot API.
+- **MongoDB Database** – Stores user and session data.
+- **JWT Authentication** – Used for secure user authorization.
+- **Async Webhooks** – Supports webhook integration for Telegram.
+
+#### Frontend
+
+- **SvelteKit** – Modern reactive framework for building single-page apps.
+- **Telegram WebApp SDK (@twa-dev/sdk)** – Integration with Telegram’s native UI.
+- **Dynamic Theming** – Adapts automatically to Telegram’s light/dark theme.
+- **TailwindCSS** – Utility-first CSS framework for consistent UI.
+- **REST API Integration** – Communicates with FastAPI backend via /api/\* routes.
 
 ## Usage
 
@@ -17,38 +29,67 @@ This project is a web application skeleton for building a Telegram bot using Fas
 
 ```bash
 git clone https://github.com/sibeardev/webapp_telegram_fastapi.git
-```
-
-2. Navigate into the cloned directory: 
-
-```bash
 cd webapp_telegram_fastapi
 ```
 
-3. Install dependencies: 
-   - `pip install virtualenv`
-   - `python -m venv .venv` (create a virtual environment)
-   - `source .venv/bin/activate` (activate the virtual environment)
-   - `pip install -r requirements.txt`
+2. Environment Setup
 
-4. Set up environment variables: Create a `.env` file and define the necessary environment variables.
+Create `.env` in backend/ directory:
 
 ```plaintext
-   TELEGRAM_TOKEN=  # Telegram API Token
-   MONGODB_URL=mongodb://localhost:27017  # MongoDB connection URL
-   X_TOKEN=fake-super-secret-token  # Additional secret token
-   WEBHOOK_URL= # Webhook URL
+   MONGO_DSN=mongodb://mongo:27017
+   SECRET_KEY=super_secret_key
+
+   TELEGRAM__TOKEN=You can obtain a bot token from @BotFather in Telegram.
+   TELEGRAM__SECRET="secrettelegram"
+   TELEGRAM__ADMINS=[123456789]
+
+   EXTERNAL_URL=https://example.com
 ```
 
-Note: For testing purposes, you can use [ngrok](https://ngrok.com/docs/getting-started/) to expose your local server to the internet. After installing ngrok, run ngrok http 8000 in a separate terminal window. Then, insert the ngrok URL generated for your server as the value for the WEBHOOK_URL variable in your .env file.
+> Note: For testing purposes, you can use [ngrok](https://ngrok.com/docs/getting-started/) to expose your local server to the internet. After installing ngrok, run ngrok http 8000 in a separate terminal window. Then, insert the ngrok URL generated for your server as the value for the EXTERNAL_URL variable in your .env file.
 
-5. Start the application: `docker-compose up`
+3. Running with Docker
 
-## Contributing
+```bash
+docker-compose up --build
+```
 
-Contributions are welcome! Feel free to submit issues, feature requests, or pull requests.
+This will:
+
+- Build the SvelteKit frontend (Node.js 20)
+- Build the FastAPI backend (Python 3.12)
+- Run a MongoDB instance
+- Serve the built frontend via FastAPI at /
+
+## Telegram Integration
+
+Create a Telegram Bot using @BotFather
+Set the WebApp URL in your bot configuration to your deployed app (e.g. https://yourdomain.com)
+Launch the bot and open the WebApp directly in Telegram.
+
+## Frontend Theming
+
+The application automatically applies Telegram’s dynamic theme colors using CSS variables:
+
+```css
+.tg-bg {
+  background-color: var(--tg-theme-bg-color);
+}
+.tg-text {
+  color: var(--tg-theme-text-color);
+}
+.tg-button-bg {
+  background-color: var(--tg-theme-button-color);
+}
+.tg-button-text {
+  color: var(--tg-theme-button-text-color);
+}
+...
+```
+
+These styles are defined in src/app.css and imported globally in +layout.svelte.
 
 ## License
 
 This project is licensed under the MIT License.
-
