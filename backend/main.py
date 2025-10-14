@@ -4,22 +4,16 @@ import os
 from urllib.parse import urljoin
 
 import uvicorn
-from app.api.routes.main import api_router
-from app.core import db
-from app.core.config import (
-    DEBUG,
-    EXTERNAL_URL,
-    FRONTEND_DIR,
-    HOST,
-    PORT,
-    TELEGRAM_SECRET,
-)
-from app.exceptions import exception_handlers
-from bot.dispatcher import TELEGRAM_BOT
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from telegram import Update
 from telegram.error import NetworkError, TelegramError
+
+from app.api.routes.main import api_router
+from app.exceptions import exception_handlers
+from bot.dispatcher import TELEGRAM_BOT
+from core import db
+from core.config import DEBUG, EXTERNAL_URL, FRONTEND_DIR, HOST, PORT, TELEGRAM_SECRET
 
 logger = logging.getLogger(__name__)
 

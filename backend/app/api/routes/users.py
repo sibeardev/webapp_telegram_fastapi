@@ -1,10 +1,11 @@
 import logging
 
-from app.api.depends import get_current_user
-from app.core.config import TELEGRAM_TOKEN
-from app.core.security import create_access_token, validate_telegram_init_data
-from bot.models import User
 from fastapi import APIRouter, Depends, HTTPException, Request
+
+from app.api.depends import get_current_user
+from bot.models import User
+from core.config import TELEGRAM_TOKEN
+from core.security import create_access_token, validate_telegram_init_data
 
 logger = logging.getLogger(__name__)
 

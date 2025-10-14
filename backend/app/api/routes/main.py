@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from . import telegram, users
+from app.api.routes import telegram, users
 
 api_router = APIRouter(prefix="/api")
 

@@ -2,8 +2,7 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from bot.models import User
-
-from .config import MONGO_DSN
+from core.config import MONGO_DSN
 
 
 async def init_db():

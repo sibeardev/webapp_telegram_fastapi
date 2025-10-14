@@ -1,8 +1,7 @@
 from telegram.ext import Application
 
-from app.core.config import TELEGRAM_TOKEN
-
-from .handlers import start
+from bot.handlers import start
+from core.config import TELEGRAM_TOKEN
 
 TELEGRAM_BOT = (
     Application.builder()

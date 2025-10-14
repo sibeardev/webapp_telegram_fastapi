@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 from typing import Optional
 from urllib.parse import parse_qsl
 
-from app.core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from jose import jwt
+
+from core.config import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 
 logger = logging.getLogger(__name__)
 

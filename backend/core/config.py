@@ -6,7 +6,7 @@ from .env import EnvSettings
 
 ENV = EnvSettings()  # type: ignore
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[1]
 FRONTEND_DIR = BASE_DIR / "frontend" / "build"
 
 PROJECT_NAME = ENV.PROJECT_NAME

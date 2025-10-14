@@ -1,8 +1,9 @@
-from app.core.config import ALGORITHM, SECRET_KEY
-from bot.models import User
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
+
+from bot.models import User
+from core.config import ALGORITHM, SECRET_KEY
 
 security = HTTPBearer()
 

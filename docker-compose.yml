@@ -21,7 +21,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./backend/.env
+      - .env
     restart: always
 
 volumes:
