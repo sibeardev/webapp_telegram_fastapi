@@ -5,6 +5,7 @@ description = "Web application skeleton for building a Telegram bot using FastAP
 readme = "README.md"
 requires-python = "<4.0,>=3.9"
 dependencies = [
+    "aio-pika>=9.5.6",
     "beanie>=2.0.0",
     "fastapi>=0.118.0",
     "motor>=3.7.1",
