@@ -42,7 +42,7 @@ export async function sendMailing(title: string, text: string) {
       return;
     }
 
-    const response = await fetch("/api/bulk_mailing", {
+    const response = await fetch("/api/mailing/bulk", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
