@@ -8,7 +8,18 @@ services:
       - mongo_data:/data/db
     restart: always
 
+  rabbit:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+    restart: always
+
   backend:
+    image: telegram_miniapp
     build:
       context: .
       dockerfile: Dockerfile
@@ -24,6 +35,24 @@ services:
       - .env
     restart: always
 
+  worker:
+    image: telegram_miniapp
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: worker
+    command: uv run python3 -m worker
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app/backend
+    depends_on:
+      - rabbit
+      - backend
+    restart: always
+
 volumes:
   mongo_data:
+    driver: local
+  rabbit_data:
     driver: local
