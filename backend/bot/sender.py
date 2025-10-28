@@ -27,5 +27,3 @@ async def send_message(user_id: int, message_text: str) -> None:
         logger.error(
             f"Unexpected error sending message to user {user_id}: {e}", exc_info=True
         )
-    else:
-        logger.info(f"Message successfully sent to user {user_id}")
