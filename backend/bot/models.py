@@ -12,6 +12,7 @@ class User(Document):
     is_active: bool = True
     language_code: Optional[str]
     is_premium: bool = False
+    is_staff: bool = False
     allows_write_to_pm: bool = True
     photo_url: Optional[str]
     date_joined: datetime = datetime.now()
