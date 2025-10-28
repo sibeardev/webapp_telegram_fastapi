@@ -10,8 +10,13 @@ class TelegramSettings(BaseModel):
     SECRET: str
 
 
+class RabbitMQSettings(BaseModel):
+    URL: str
+
+
 class EnvSettings(BaseSettings):
     MONGO_DSN: MongoDsn
+    RABBITMQ: RabbitMQSettings
     TELEGRAM: TelegramSettings
     EXTERNAL_URL: AnyHttpUrl
     PORT: int = 8000
