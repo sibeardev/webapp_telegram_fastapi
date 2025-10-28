@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 import aio_pika
 import json
-from typing import List
 
 from core.config import RABBITMQ_URL
 from app.api.depends import get_current_user
@@ -20,7 +19,10 @@ async def bulk_mailing(payload: dict, user: User = Depends(get_current_user)):
     if not user.is_staff:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    users_list: List[int] = [user.user_id for user in await User.find_all().to_list()]
+    users_list: list[int] = [
+        user.user_id
+        for user in await User.find(User.allows_write_to_pm == True).to_list()  # noqa: E712
+    ]
 
     connection = await aio_pika.connect_robust(RABBITMQ_URL)
     async with connection:

@@ -1,6 +1,6 @@
 from telegram.ext import Application
 
-from bot.handlers import start
+from bot.handlers import start, member
 from core.config import TELEGRAM_TOKEN
 
 TELEGRAM_BOT = (
@@ -12,4 +12,9 @@ TELEGRAM_BOT = (
 )
 
 
-TELEGRAM_BOT.add_handlers(handlers=[*start.handlers])
+TELEGRAM_BOT.add_handlers(
+    handlers=[
+        *start.handlers,
+        *member.handlers,
+    ]
+)
