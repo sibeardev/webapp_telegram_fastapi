@@ -16,10 +16,21 @@
 
       const token = localStorage.getItem("token");
       if (!token) {
+        localStorage.removeItem("token");
         goto("/auth");
         return;
       }
       user = await getUser(token);
+
+      if (user && user.is_staff) {
+        WebApp.SecondaryButton.setText("Mailing");
+        WebApp.SecondaryButton.onClick(() => {
+          goto("/mailing");
+        });
+        WebApp.SecondaryButton.show();
+      }
+
+      WebApp.BackButton.hide()
       WebApp.ready();
       WebApp.expand();
     } catch (error: any) {
