@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import WebApp from "@twa-dev/sdk";
   import { sendMailing } from "../../services/api";
+  import { goto } from "$app/navigation";
 
   let errorMessage: string | null = null;
   let title = "";
@@ -10,6 +11,7 @@
   async function handleSubmit() {
     const result = await sendMailing(title, text);
     alert(result);
+    goto("/")
   }
 
   onMount(async () => {
