@@ -12,6 +12,7 @@ It includes a SvelteKit frontend that runs as a Telegram WebApp and interacts wi
 - **FastAPI Framework** – High-performance Python web framework.
 - **Python Telegram Bot** – Integration with the Telegram Bot API.
 - **MongoDB Database** – Stores user and session data.
+- **RabbitMQ** – Message broker for handling background tasks and managing message queues.
 - **JWT Authentication** – Used for secure user authorization.
 - **Async Webhooks** – Supports webhook integration for Telegram.
 
@@ -38,6 +39,7 @@ Create `.env` in backend/ directory:
 
 ```plaintext
    MONGO_DSN=mongodb://mongo:27017
+   RABBITMQ__URL=amqp://guest:guest@rabbitmq/
    SECRET_KEY=super_secret_key
 
    TELEGRAM__TOKEN=You can obtain a bot token from @BotFather in Telegram.
