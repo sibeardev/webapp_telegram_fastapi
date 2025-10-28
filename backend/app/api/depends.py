@@ -13,7 +13,9 @@ async def get_current_user(
 ):
     token = credentials.credentials
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token, SECRET_KEY.get_secret_value(), algorithms=[ALGORITHM]
+        )
         user = await User.get(payload.get("sub"))
         if not user:
             raise HTTPException(status_code=401)

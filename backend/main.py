@@ -17,6 +17,9 @@ from core.config import DEBUG, EXTERNAL_URL, FRONTEND_DIR, HOST, PORT, TELEGRAM_
 
 logger = logging.getLogger(__name__)
 
+if not DEBUG:
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+
 
 async def main() -> None:
     await db.init_db()
@@ -25,7 +28,7 @@ async def main() -> None:
     await TELEGRAM_BOT.bot.set_webhook(
         url=urljoin(EXTERNAL_URL, "/api/telegram/update"),
         allowed_updates=Update.ALL_TYPES,
-        secret_token=TELEGRAM_SECRET,
+        secret_token=TELEGRAM_SECRET.get_secret_value(),
     )
     logger.info(await TELEGRAM_BOT.bot.get_me())
     logger.info(await TELEGRAM_BOT.bot.get_webhook_info())
@@ -55,7 +58,9 @@ async def main() -> None:
         except (NetworkError, TelegramError) as error:
             logger.error("Telegram API error: %s", error, exc_info=True)
         except OSError as error:
-            logger.error("Server error (port or config issue): %s", error, exc_info=True)
+            logger.error(
+                "Server error (port or config issue): %s", error, exc_info=True
+            )
         except asyncio.CancelledError:
             logger.info("Asyncio task cancelled, shutting down gracefully.")
             raise

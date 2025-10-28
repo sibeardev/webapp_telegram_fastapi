@@ -1,13 +1,13 @@
 from functools import cached_property
 
-from pydantic import AnyHttpUrl, BaseModel, MongoDsn
+from pydantic import AnyHttpUrl, BaseModel, MongoDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class TelegramSettings(BaseModel):
-    TOKEN: str
+    TOKEN: SecretStr
     ADMINS: list[int]
-    SECRET: str
+    SECRET: SecretStr
 
 
 class RabbitMQSettings(BaseModel):
@@ -23,7 +23,7 @@ class EnvSettings(BaseSettings):
     HOST: str = "0.0.0.0"
     DEBUG: bool = True
     PROJECT_NAME: str = "fridrik"
-    SECRET_KEY: str
+    SECRET_KEY: SecretStr
 
     model_config = SettingsConfigDict(
         env_file=".env",

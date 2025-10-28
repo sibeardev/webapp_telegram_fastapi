@@ -26,7 +26,7 @@ async def webapp_auth(request: Request):
     if not init_data or not init_data_unsafe:
         raise HTTPException(status_code=400, detail="Invalid data")
 
-    if not validate_telegram_init_data(init_data, TELEGRAM_TOKEN):
+    if not validate_telegram_init_data(init_data, TELEGRAM_TOKEN.get_secret_value()):
         raise HTTPException(status_code=403, detail="Invalid Telegram signature")
 
     user_data = init_data_unsafe.get("user")

@@ -3,10 +3,13 @@ import logging
 import json
 import aio_pika
 
-from core.config import RABBITMQ_URL
+from core.config import RABBITMQ_URL, DEBUG
 from bot.sender import send_message
 
 logger = logging.getLogger(__name__)
+
+if not DEBUG:
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 async def connect(url):

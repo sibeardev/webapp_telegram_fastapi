@@ -17,7 +17,7 @@ def create_access_token(user_id: str, expires_delta: Optional[timedelta] = None)
         expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     to_encode = {"sub": str(user_id), "exp": expire}
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, SECRET_KEY.get_secret_value(), algorithm=ALGORITHM)
 
 
 def validate_telegram_init_data(init_data: str, bot_token: str) -> bool:

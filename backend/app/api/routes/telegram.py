@@ -20,7 +20,7 @@ router = APIRouter(tags=["telegram"], prefix="/telegram")
 async def telegram_update(request: Request):
 
     token = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
-    if token != TELEGRAM_SECRET:
+    if token != TELEGRAM_SECRET.get_secret_value():
         logger.warning("Webhook request with invalid secret token")
         raise HTTPException(status_code=403, detail="Forbidden")
 
